@@ -1,0 +1,55 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+double yylval;
+%}
+%%
+[0-9]+ { yylval = atof(yytext); return '0'; }
+[0-9]+[.][0-9]+ { yylval = atof(yytext); return '0'; }
+"+" { return '+'; }
+"-" { return '-'; }
+"*" { return '*'; }
+"/" { return '/'; }
+[ \t\n] /* Skip whitespace */
+. { prinƞ("Invalid expression: %s\n", yytext); }
+%%
+int main(void) {
+ double result;
+ char op;
+ prinƞ("Enter operaƟon (operand1 operator operand2):\n");
+ while (scanf("%lf %c %lf", &result, &op, &yylval) != EOF) {
+ double operand = yylval;
+ double answer;
+ switch (op) {
+ case '+':
+ answer = result + operand;
+ prinƞ("%s: %.2f\n", "AddiƟon", answer);
+ break;
+ case '-':
+ answer = result - operand;
+ prinƞ("%s: %.2f\n", "SubtracƟon", answer);
+ break;
+ case '*':
+ answer = result * operand;
+ prinƞ("%s: %.2f\n", "MulƟplicaƟon", answer);
+ break;
+ case '/':
+ if (operand != 0) {
+ answer = result / operand;
+ prinƞ("%s: %.2f\n", "Division", answer);
+ }
+ else {
+ prinƞ("Error: Division by zero\n");
+ conƟnue; // Skip to next iteraƟon
+ }
+ break;
+ default:
+ prinƞ("Invalid operaƟon\n");
+ conƟnue; // Skip to next iteraƟon
+ }
+ result = answer;
+ prinƞ("\n"); // Print a newline for spacing between operaƟons
+ }
+ return 0;
+}
+int yywrap() { return 1; }
